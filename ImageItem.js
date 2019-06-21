@@ -29,13 +29,13 @@ class ImageItem extends Component {
     this.imageSize = (width - (imagesPerRow + 1) * imageMargin) / imagesPerRow;
   }
 
-  handleClick(item) {
-    this.props.onClick(item);
+  handleClick(item, fullInfo) {
+    this.props.onClick(item, fullInfo);
   }
 
   render() {
     const {
-      item, selected, selectedMarker, imageMargin,
+      item, selected, selectedMarker, imageMargin, 
     } = this.props;
 
     const marker = selectedMarker || (<Image
@@ -44,11 +44,11 @@ class ImageItem extends Component {
     />);
 
     const { image } = item.node;
-
+    
     return (
       <TouchableOpacity
         style={{ marginBottom: imageMargin, marginRight: imageMargin }}
-        onPress={() => this.handleClick(image)}
+        onPress={() => this.handleClick(image, item)}
       >
         <Image
           source={{ uri: image.uri }}
@@ -62,11 +62,13 @@ class ImageItem extends Component {
 
 ImageItem.defaultProps = {
   item: {},
+  fullInfo: {},
   selected: false,
 };
 
 ImageItem.propTypes = {
   item: PropTypes.object,
+  fullInfo: PropTypes.object,
   selected: PropTypes.bool,
   selectedMarker: PropTypes.element,
   imageMargin: PropTypes.number,

@@ -28,7 +28,7 @@ class Row extends PureComponent {
       containerWidth,
     } = this.props;
 
-    const { uri } = item.node.image;
+    const { uri } = item.node.image;    
 
     return (
       <ImageItem

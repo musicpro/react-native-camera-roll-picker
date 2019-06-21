@@ -56,6 +56,7 @@ class CameraRollPicker extends Component {
     this.state = {
       images: [],
       selected: this.props.selected,
+      selectedFullInfo: this.props.selectedFullInfo,
       lastCursor: null,
       initialLoading: true,
       loadingMore: false,
@@ -77,6 +78,7 @@ class CameraRollPicker extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       selected: nextProps.selected,
+      selectedFullInfo: nextProps.selectedFullInfo,
     });
   }
 
@@ -134,31 +136,38 @@ class CameraRollPicker extends Component {
       .then(data => this.appendImages(data), e => console.log(e));
   }
 
-  selectImage(image) {
+  selectImage(image, item) {
+    
     const {
       maximum, imagesPerRow, callback, selectSingleItem,
     } = this.props;
 
     const { selected } = this.state;
+    const { selectedFullInfo } = this.state;
     const index = arrayObjectIndexOf(selected, 'uri', image.uri);
 
     if (index >= 0) {
       selected.splice(index, 1);
+      selectedFullInfo.splice(index, 1);
+      
     } else {
       if (selectSingleItem) {
         selected.splice(0, selected.length);
+        selectedFullInfo.splice(0, selectedFullInfo.length);
       }
       if (selected.length < maximum) {
         selected.push(image);
+        selectedFullInfo.push(item);
       }
     }
 
     this.setState({
       selected,
+      selectedFullInfo,
       data: nEveryRow(this.state.images, imagesPerRow),
     });
 
-    callback(selected, image);
+    callback(selected, selectedFullInfo, image);
   }
 
   renderImage(item) {
@@ -277,6 +286,7 @@ CameraRollPicker.propTypes = {
   containerWidth: PropTypes.number,
   callback: PropTypes.func,
   selected: PropTypes.array,
+  selectedFullInfo: PropTypes.array,
   selectedMarker: PropTypes.element,
   backgroundColor: PropTypes.string,
   emptyText: PropTypes.string,
@@ -294,7 +304,8 @@ CameraRollPicker.defaultProps = {
   assetType: 'Photos',
   backgroundColor: 'white',
   selected: [],
-  callback(selectedImages, currentImage) {
+  selectedFullInfo: [],
+  callback(selectedImages, selectedFullInfoImages, currentImage) {
     console.log(currentImage);
     console.log(selectedImages);
   },
